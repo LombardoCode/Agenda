@@ -1,0 +1,32 @@
+:root {
+    --azulPrimario: #1786cf;
+}
+
+.encabezado {
+    background-color: var(--azulPrimario);
+}
+
+.agregar-contacto-contenido {
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.4);
+}
+
+.agregar-contacto-contenido h3 {
+    background-color: var(--azulPrimario);
+}
+
+#inputs {
+    display: flex;
+    justify-content: space-between;
+}
+
+#inputs div {
+    flex: 0 1 calc((100% / 3) - 1rem);
+}
+
+
+#submit {
+    display: flex;
+    justify-content: flex-end;
+}
