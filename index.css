@@ -6,27 +6,41 @@
     background-color: var(--azulPrimario);
 }
 
-.agregar-contacto-contenido {
+.contenedor-redondeado {
     border-radius: 20px;
     overflow: hidden;
     box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.4);
 }
 
-.agregar-contacto-contenido h3 {
+.subtitulo {
     background-color: var(--azulPrimario);
 }
 
-#inputs {
-    display: flex;
-    justify-content: space-between;
+#inputs div.form-group {
+    box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.6);
+    border-radius: 10px;
 }
 
-#inputs div {
-    flex: 0 1 calc((100% / 3) - 1rem);
+tbody tr td {
+    /* background-color: yellowgreen; */
 }
 
-
-#submit {
-    display: flex;
-    justify-content: flex-end;
+tbody tr td button {
+    background-color: #FFFFFF;
+    border: none;
+    padding: 6px 10px;
+    box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.2);
 }
+
+.boton-icono {
+    transition-duration: 0.4s;
+}
+
+.boton-icono i {
+    transform: scale(0.8);
+}
+
+.boton-icono:hover {
+    background-color: #b4b4b4;
+}
+
