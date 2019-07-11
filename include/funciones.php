@@ -1,15 +1,4 @@
 <?php
-function limpiarPOST() {
-    // Si tenemos datos dentro de $_POST
-    if (isset($_POST)) {
-        echo '<script>alert("Hay datos en el $_POST, habrá que eliminarlos.");</script>';
-        // Limpialo
-        $_POST = array();
-    } else {
-        echo '<script>alert("No hay datos dentro de $_POST.");</script>';
-    }
-}
-
 function insertarContacto() {
     // Necesitaremos este archivo para poder obtener la variable $conexion y realizar operaciones con la misma
     include 'conexion.php';

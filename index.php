@@ -1,4 +1,4 @@
 <?php
-include 'funciones.php';
-include 'index.view.php';
+include 'include/funciones.php';
+include 'view/index/index.view.php';
 ?>
