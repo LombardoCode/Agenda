@@ -30,6 +30,7 @@ function insertarContacto() {
             $query -> bindParam(':email', $email, PDO::PARAM_STR);
             $query -> execute();
 
+
             // Redireccionamos al usuario a la misma página, de modo que cuando sea redireccionado $_POST quede vacio y se evite la doble inserción de datos (SQL)
             header('Location: ' . $_SERVER['REQUEST_URI']);
         }
@@ -55,5 +56,45 @@ function obtenerContactos() {
         echo $exception -> getMessage();
         return false;
     }
+}
+
+function obtenerContactoEspecifico($id_contacto) {
+    // Necesitaremos este archivo para poder obtener la variable $conexion y realizar operaciones con la misma
+    include 'include/conexion.php';
+    
+    // Verificamos si la conexión a la base de datos ha sido inicializada
+    if (isset($conexion)) {
+        // Vamos a tratar de realizar la instrucción SQL
+        try {
+            // Obtenemos la información del contacto en especifico
+            $instruccion_sql = "SELECT * FROM Contactos WHERE ID_Usuario = :id";
+            $query = $conexion -> prepare($instruccion_sql);
+            $query -> bindParam(":id", $id_contacto, PDO::PARAM_INT);
+            $query -> execute();
+            $resultados = $query -> fetch();
+            if ($query -> rowCount() === 1) {
+                $respuesta = array(
+                    'respuesta' => 'correcto',
+                    'ID_Usuario' => $resultados['ID_Usuario'],
+                    'Nombre' => $resultados['Nombre'],
+                    'Telefono' => $resultados['Telefono'],
+                    'Email' => $resultados['Email']
+                );
+            } else {
+                $respuesta = array(
+                    'respuesta' => 'No se obtuvieron los datos del usuario'
+                );
+            }
+            return $respuesta;
+        } catch (Exception $error) {
+            echo $exception -> getMessage();
+            return false;
+        }
+    } else {
+        echo 'Hubo un error al conectarse a la base de datos';
+    }
+
+    
+
 }
 

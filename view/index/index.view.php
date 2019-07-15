@@ -31,15 +31,15 @@
                     </div>
                     <div class="form-group py-3 px-4">
                         <label for="telefono">Teléfono</label>
-                        <input type="text" name="telefono" id="input-telefono" class="form-control border border-primary" placeholder="Teléfono de la persona">
+                        <input type="text" name="telefono" id="input-telefono" class="form-control border border-primary" placeholder="Teléfono de la persona" required>
                     </div>
                     <div class="form-group py-3 px-4">
                         <label for="email">Email</label>
-                        <input type="email" name="email" id="input-email" class="form-control border border-primary" placeholder="Correo electrónico de la persona">
+                        <input type="email" name="email" id="input-email" class="form-control border border-primary" placeholder="Correo electrónico de la persona" required>
                     </div>
                 </div>
                 <div id="submit" class="d-flex justify-content-end">
-                    <input type="submit" name="submit-contacto" id="submit-contacto" class="btn btn-lg btn-success my-2" value="Crear contacto">
+                    <input type="submit" name="submit-contacto" id="submit-contacto" class="btn btn-lg btn-success my-2" value="Crear contacto" required>
                 </div>
             </form>
         </div>
@@ -79,7 +79,7 @@
                             <td><?php echo $contacto['Telefono'] ?></td>
                             <td><?php echo $contacto['Email'] ?></td>
                             <td>
-                                <a href="<?php echo 'editar?ID_Usuario=' . $contacto['ID_Usuario'] ?>" class="rounded boton-icono border border-secondary">
+                                <a href="<?php echo 'editar.php?ID_Usuario=' . $contacto['ID_Usuario']; ?>" class="rounded boton-icono border border-secondary">
                                     <i class="fas fa-edit fa-2x icono-editar text-dark"></i>
                                 </a>
                                 <a data-id="<?php echo $contacto['ID_Usuario'] ?>" class="rounded boton-icono border border-secondary">
@@ -100,6 +100,7 @@
         let formulario_de_contacto = document.getElementById("formulario-de-contacto");
 
         formulario_de_contacto.addEventListener("submit", validarInformacion);
+
     </script>
 
 </body>

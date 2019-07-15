@@ -1,0 +1,59 @@
+:root {
+    --azulPrimario: #1786cf;
+    --amarillo: #d6b10c;
+    --amarilloFuerte: #c2a10e;
+}
+
+.encabezado {
+    background-color: var(--amarillo);
+    border-bottom: 8px solid var(--amarilloFuerte);
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.4);
+}
+
+.contenedor-redondeado {
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.4);
+}
+
+.subtitulo {
+    background-color: var(--amarillo);
+}
+
+#inputs div.form-group {
+    box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.6);
+    border-radius: 10px;
+}
+
+.notificacion-visible {
+    opacity: 1;
+    transform: opacity 0.5s;
+}
+
+.notificacion-exito {
+    position: fixed;
+    right: 1%;
+    top: 10px;
+    color: white;
+    width: max-content;
+    max-height: auto;
+    padding: 1rem;
+    border-radius: 0.4rem;
+}
+
+.notificacion-error {
+    position: fixed;
+    right: 1%;
+    top: 10px;
+    color: white;
+    max-width: max-content;
+    max-height: auto;
+    padding: 1rem;
+    border-radius: 0.4rem;
+}
+
+#icono-notificacion {
+    margin-right: 10px;
+}
+
+
