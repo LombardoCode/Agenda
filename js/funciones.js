@@ -1,3 +1,6 @@
+// Obtenemos los botones eliminadores para después crear un nodeList con los botones (esto se hace con el fin de que cuando el usuario haga un clic en uno de estos botones el sistema sepa qué botón hizo clic el usuario y en base a ello podamos eliminar el contacto correcto (ya que el boton tiene un «data-id» donde obtenemos el ID del usuario))
+obtenerBotonesEliminadores();
+
 let validarInformacion = function(evento) {
     // Evitamos que el formulario recargue la página
     evento.preventDefault();
@@ -98,10 +101,11 @@ function peticionAJAX(informacion_del_contacto) {
 
             // Creamos el botón que borrará el contacto
             const boton_eliminar = document.createElement("a");
-            boton_eliminar.classList.add("rounded", "boton-icono", "border", "border-secondary");
+            boton_eliminar.classList.add("rounded", "boton-icono", "border", "border-secondary", "boton-eliminar");
             boton_eliminar.setAttribute("data-id", respuesta.id_insertado);
+            boton_eliminar.setAttribute("data-toggle", "modal");
+            boton_eliminar.setAttribute("data-target", "#EliminarContactoModal");
 
-            console.log(respuesta.id_insertado);
 
             // Creamos el icono que tendrá nuestro botón de eliminar
             const icono_eliminar = document.createElement("i");
@@ -188,6 +192,66 @@ function actualizarContactoAJAX(evento) {
 
 
 function obtenerBotonesEliminadores() {
-    console.log("Estamos dentro de la función.");
+    let botonesEliminadores = document.querySelectorAll('.boton-eliminar');
+
+    // Recorremos un arreglo
+    for (let i = 0; i < botonesEliminadores.length; i++) {
+        botonesEliminadores[i].addEventListener("click", function(evento) {
+            // Obtenemos el botón eliminador
+            let boton_eliminador = this;
+            tr_contacto = boton_eliminador.parentElement.parentElement;
+
+            id_usuario = this.getAttribute("data-id");
+            console.log("Has clickeado un botón. | id: " + id_usuario);
+
+            // Le asignamos al modal un data-id con el usuario que se va a eliminar
+            let modal = document.getElementById("EliminarContactoModal");
+            modal.setAttribute("data-id", id_usuario);
+
+            // Obtenemos el botón definitivo que elimina al contacto
+            let botonEliminadorContacto = document.getElementById("botonEliminadorContacto");
+
+            // Le asignamos un Listener cada vez que es presionado (Si lo presionan eliminan al usuario deseado)
+            botonEliminadorContacto.addEventListener("click", function(evento) {
+                // Preparamos la información a mandar
+                let datos_contacto = new FormData();
+                datos_contacto.append("id_usuario", id_usuario);
+
+                // Creamos un objeto XHR para hacer la conexión con el servidor mediante AJAX (el archivo PHP a abrir se encargará de eliminar al contacto)
+                let xhr = new XMLHttpRequest();
+
+                // Abrimos el archivo el cual queremos mandar la información
+                xhr.open('POST', 'eliminarContacto.php', true);
+
+                // Escuchamos las respuestas del servidor
+                xhr.onreadystatechange = function() {
+                    // Si el request ha sido mandado y el archivo a abrir ha sido localizado...
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        // Obtenemos la respuesta del servidor por medio de un objeto JSON
+                        let respuesta = JSON.parse(xhr.responseText);
+
+                        // Imprimimos la respuesta
+                        console.log(respuesta);
+
+                        // Si la respuesta es correcta (correcta => se elimnió el usuario) eliminamos el <tr> del DOM
+                        if (respuesta.respuesta === 'correcto') {
+                            console.log("El contacto ha sido eliminado.");
+                            // Eliminamos el <tr> del contacto en especifico
+                            tr_contacto.parentNode.removeChild(tr_contacto);
+                        } else {
+                            console.log("El contacto NO ha sido eliminado.");
+                        }
+
+                    }
+                }
+
+                xhr.send(datos_contacto);
+
+            });
+
+
+            
+        });
+    }
 }
 

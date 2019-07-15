@@ -10,6 +10,7 @@
     <title>Agenda de contactos</title>
 </head>
 <body>
+
     <!-- Encabezado -->
     <header>
         <div class="encabezado">
@@ -42,6 +43,29 @@
                     <input type="submit" name="submit-contacto" id="submit-contacto" class="btn btn-lg btn-success my-2" value="Crear contacto" required>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- El modal -->
+    <div class="modal fade hide" id="EliminarContactoModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Eliminación de contacto</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <p>¿Estas seguro que desea eliminar el siguiente contacto?:</p>
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" id="botonEliminadorContacto" class="btn btn-danger" data-dismiss="modal">Eliminar contacto</button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -82,7 +106,7 @@
                                 <a href="<?php echo 'editar.php?ID_Usuario=' . $contacto['ID_Usuario']; ?>" class="rounded boton-icono border border-secondary">
                                     <i class="fas fa-edit fa-2x icono-editar text-dark"></i>
                                 </a>
-                                <a data-id="<?php echo $contacto['ID_Usuario'] ?>" class="rounded boton-icono border border-secondary">
+                                <a data-id="<?php echo $contacto['ID_Usuario'] ?>" class="rounded boton-icono border border-secondary boton-eliminar" data-toggle="modal" data-target="#EliminarContactoModal">
                                     <i class="fas fa-user-slash fa-2x icono-eliminar text-danger"></i>
                                 </a>
                             </td>
@@ -93,6 +117,9 @@
             </table>
         </div>
     </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
     <script src="js/funciones.js"></script>
     <script>
@@ -102,6 +129,7 @@
         formulario_de_contacto.addEventListener("submit", validarInformacion);
 
     </script>
+    
 
 </body>
 </html>
