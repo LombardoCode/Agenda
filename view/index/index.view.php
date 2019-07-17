@@ -73,6 +73,10 @@
     <div class="lista-de-contactos">
         <div class="lista-de-contactos-contenido container contenedor-redondeado px-0 mt-4">
             <h3 class="text-center text-white py-3 subtitulo">Lista de contactos</h3>
+            <h3 class="text-center py-3">Buscador de contactos</h3>
+            <div id="buscador-de-contactos" class="justify-content-center d-none d-md-flex mb-3">
+                <input type="text" id="buscador" class="form-control w-75 border border-primary" placeholder="Busca un contacto">
+            </div>
             <table class="table" id="tabla-de-contactos">
                 <thead>
                     <tr>
@@ -82,7 +86,7 @@
                         <th>Opciones</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="tbody">
                     <?php
                     // Si el usuario ya realizó un submit al formulario de contacto...
                     if (isset($_POST['submit-contacto'])) {
@@ -99,14 +103,14 @@
                         // Imprime la información de cada contacto en una fila para la tabla
                         foreach($contactos as $contacto) { ?>
                         <tr>
-                            <td><?php echo $contacto['Nombre'] ?></td>
-                            <td><?php echo $contacto['Telefono'] ?></td>
-                            <td><?php echo $contacto['Email'] ?></td>
+                            <td><?php echo $contacto['Nombre']; ?></td>
+                            <td><?php echo $contacto['Telefono']; ?></td>
+                            <td><?php echo $contacto['Email']; ?></td>
                             <td>
                                 <a href="<?php echo 'editar.php?ID_Usuario=' . $contacto['ID_Usuario']; ?>" class="rounded boton-icono border border-secondary">
                                     <i class="fas fa-edit fa-2x icono-editar text-dark"></i>
                                 </a>
-                                <a data-id="<?php echo $contacto['ID_Usuario'] ?>" class="rounded boton-icono border border-secondary boton-eliminar" data-toggle="modal" data-target="#EliminarContactoModal">
+                                <a data-id="<?php echo $contacto['ID_Usuario']; ?>" class="rounded boton-icono border border-secondary boton-eliminar" data-toggle="modal" data-target="#EliminarContactoModal">
                                     <i class="fas fa-user-slash fa-2x icono-eliminar text-danger"></i>
                                 </a>
                             </td>

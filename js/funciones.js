@@ -52,7 +52,7 @@ function mostrarNotificacion(mensaje, clase, status) {
     let notificacion = document.createElement("div");
     notificacion.classList.add(clase, status ? "bg-success" : "bg-danger");
     notificacion.setAttribute("id", "notificacion-contacto");
-    notificacion.innerHTML = (status ? '<i id="icono-notificacion" class="fas fa-times-circle"></i>' : '<i id="icono-notificacion" class="fas fa-check-circle"></i>') + mensaje;
+    notificacion.innerHTML = (status ? '<i id="icono-notificacion" class="fas fa-check-circle"></i>' : '<i id="icono-notificacion" class="fas fa-times-circle"></i>') + mensaje;
     document.body.appendChild(notificacion);
     notificacion.classList.add("notificacion-visible");
 
@@ -176,7 +176,7 @@ function actualizarContactoAJAX(evento) {
                 } else {
                     if (respuesta.respuesta === 'Sin cambios') {
                         // No se realizó ningún cambio con la instrucción UPDATE
-                        mostrarNotificacion("¡No hubo ningún cambio, regresando al index en breve...!", "notificacion-error", false);
+                        mostrarNotificacion("¡No hubo ningún cambio. Regresando al index en breve...", "notificacion-error", false);
 
                         // Redireccionamos al usuario nuevamente al index.php
                         setTimeout(() => {
@@ -241,17 +241,138 @@ function obtenerBotonesEliminadores() {
                         } else {
                             console.log("El contacto NO ha sido eliminado.");
                         }
-
                     }
                 }
 
+                // Mandamos el XMLHttpRequest
                 xhr.send(datos_contacto);
-
             });
-
-
-            
         });
     }
 }
+
+
+document.getElementById("buscador").addEventListener("input", function(evento) {
+    //console.log("Has escrito: \"" + this.value + "\"");
+    let busqueda = this.value;
+
+    let datos_busqueda = new FormData();
+    datos_busqueda.append("busqueda", busqueda);
+
+    // Si la longitud de la búsqueda del usuario es mayor a 0, que realice una búsqueda con el input del usuario
+    if (busqueda.length > 0) {
+        console.log("Mayor a 0" + busqueda.length + ".");
+
+        // Creamos un XHR
+        let xhr = new XMLHttpRequest();
+    
+        // Abrimos el archivo de conexión
+        xhr.open('POST', 'buscarContacto.php', true);
+    
+        // Escuchamos la respuesta que nos vaya dando el servidor
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                // Escuchamos la respuesta del servidor y lo convertimos en un JSON
+                let respuesta = JSON.parse(xhr.responseText);
+
+                // Si dentro de la propiedad "respuesta" del JSON retornada por el servidor es igual a "correcto"...
+                if (respuesta.respuesta === 'correcto') {
+                    // Limpiamos el tbody con la plantilla original lista para inyectar valores
+                    document.querySelector("table#tabla-de-contactos").innerHTML = `
+                        <thead>
+                            <tr>
+                                <td>Nombre</td>
+                                <td>Teléfono</td>
+                                <td>Email</td>
+                                <td>Opciones</td>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody"></tbody>
+                    `;
+
+                    // Recorremos todos los resultados y vamos personalizando un <td>
+                    for (let i = 0; i < respuesta.resultados.length; i++) {
+                        // Creamos el <tr>
+                        let nuevo_contacto = document.createElement("tr");
+    
+                        // Llenanamos el <td> con información
+                        nuevo_contacto.innerHTML = `
+                            <td>${respuesta.resultados[i].Nombre}</td>
+                            <td>${respuesta.resultados[i].Telefono}</td>
+                            <td>${respuesta.resultados[i].Email}</td>
+                            <td>
+                                <a href="editar.php?ID_Usuario=${respuesta.resultados[i].ID_Usuario}" class="rounded boton-icono border border-secondary">
+                                    <i class="fas fa-edit fa-2x icono-editar text-dark"></i>
+                                </a>
+                                <a data-id="${respuesta.resultados[i].ID_Usuario}" class="rounded boton-icono border border-secondary boton-eliminar" data-toggle="modal" data-target="#EliminarContactoModal">
+                                    <i class="fas fa-user-slash fa-2x icono-eliminar text-danger"></i>
+                                </a>
+                            </td>
+                        `;
+
+                        // Agregamos el contacto al DOM
+                        document.querySelector("table#tabla-de-contactos tbody").appendChild(nuevo_contacto);
+                    }
+                } else {
+                    /* Entramos a este «else» debido que lo que ingresó el usuario no se encuentra dentro de la base de datos */
+                    // Limpiamos el tbody
+                    document.querySelector("table#tabla-de-contactos").innerHTML = '<p class="pt-3 text-center font-weight-bold">No hay resultados para "' + busqueda +  '". Prueba buscando otro contacto.</p>';
+
+                }
+            }
+        }
+    
+        xhr.send(datos_busqueda);
+    } else {
+        /* Entramos a este «else» porque la longitud de caracteres de la búsqueda realizada por el usuario es NO fué mayor a 0 */
+        // Creamos el XMLHttpRequest
+        let xhr = new XMLHttpRequest();
+
+        // Abrimos el archivo que queremos que el servidor escuche de manera asíncrona
+        xhr.open('POST', 'mostrarContactos.php', true);
+
+        // Escuchamos los cambios que hay en el servidor
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                // Escuchamos la respuesta del servidor y lo convertimos en un JSON
+                let respuesta = JSON.parse(xhr.responseText);
+
+                // Si dentro de la propiedad "respuesta" del JSON retornada por el servidor es igual a "correcto"...
+                if (respuesta.respuesta === 'correcto') {
+                    // Limpiamos el tbody
+                    document.querySelector("table#tabla-de-contactos tbody").innerHTML = "";
+
+                    // Recorremos todos los resultados y vamos personalizando un <td>
+                    for (let i = 0; i < respuesta.resultados.length; i++) {
+                        // Creamos el <tr>
+                        let nuevo_contacto = document.createElement("tr");
+
+                        // Llenamos el <td> con información
+                        nuevo_contacto.innerHTML = `
+                            <td>${respuesta.resultados[i].Nombre}</td>
+                            <td>${respuesta.resultados[i].Telefono}</td>
+                            <td>${respuesta.resultados[i].Email}</td>
+                            <td>
+                                <a href="editar.php?ID_Usuario=${respuesta.resultados[i].ID_Usuario}" class="rounded boton-icono border border-secondary">
+                                    <i class="fas fa-edit fa-2x icono-editar text-dark"></i>
+                                </a>
+                                <a data-id="${respuesta.resultados[i].ID_Usuario}" class="rounded boton-icono border border-secondary boton-eliminar" data-toggle="modal" data-target="#EliminarContactoModal">
+                                    <i class="fas fa-user-slash fa-2x icono-eliminar text-danger"></i>
+                                </a>
+                            </td>
+                        `;
+                            
+                        // Agregamos el contacto al DOM
+                        document.querySelector("table#tabla-de-contactos tbody").appendChild(nuevo_contacto);
+                    }
+                }
+            }
+        }
+
+        // Mandamos el XMLHttpRequest
+        xhr.send();
+
+        console.log("El campo de input está vacio.");
+    }
+});
 
