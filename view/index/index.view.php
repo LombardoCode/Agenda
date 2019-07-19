@@ -70,7 +70,7 @@
     </div>
 
     <!-- Sección: "Lista de contactos" -->
-    <div class="lista-de-contactos">
+    <div class="lista-de-contactos mb-5">
         <div class="lista-de-contactos-contenido container contenedor-redondeado px-0 mt-4">
             <h3 class="text-center text-white py-3 subtitulo">Lista de contactos</h3>
             <h3 class="text-center py-3">Buscador de contactos</h3>

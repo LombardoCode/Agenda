@@ -13,7 +13,6 @@ let validarInformacion = function(evento) {
     // Si tenemos datos dentro de los inputs...
     if (nombre !== '' && telefono !== '' && email !== '') {
         mostrarNotificacion("¡El contacto ha sido creado satisfactoriamente!", "notificacion-exito", true);
-        console.log("Esta lleno de datos!");
 
         // Metemos todos los datos y los metemos dentro de un FormData
         let informacion_del_contacto = new FormData();
@@ -30,22 +29,15 @@ let validarInformacion = function(evento) {
     } else {
         // Caso contrario significa que no tenemos los todos los inputs rellenados
         mostrarNotificacion("¡Hace falta rellenar campos!", "notificacion-error", false);
-        console.log("Faltan datos!");
     }
 }
 
 function mostrarNotificacion(mensaje, clase, status) {
-    console.log("Mensaje: " + mensaje);
-    console.log("Clase: " + clase);
-    
     // Creamos la notificacion y la agregamos al HTML (DOM)
     // Verificamos si una notificación ha sido creada con anterioridad o no
     if (document.body.contains(document.getElementById("notificacion-contacto"))) {
-        console.log("Existe la notificación.");
         // Eliminamos la notificación
         document.body.removeChild(document.getElementById("notificacion-contacto"));
-    } else {
-        console.log("No existe la notificación.");
     }
 
     // Creamos una nueva notificación debido a que no se encontró una notificación previamente creada
@@ -71,7 +63,6 @@ function peticionAJAX(informacion_del_contacto) {
     // Verificamos el estado del XHR
     xhr.onreadystatechange = function() {
         // Si todo va bien
-        console.log("Ready: " + xhr.readyState);
         if (xhr.readyState === 4 && xhr.status === 200) {
             // Obtenemos la respuesta del servidor
             const respuesta = JSON.parse(xhr.responseText);
@@ -201,8 +192,8 @@ function obtenerBotonesEliminadores() {
             let boton_eliminador = this;
             tr_contacto = boton_eliminador.parentElement.parentElement;
 
+            // Obtenemos el id del usuario
             id_usuario = this.getAttribute("data-id");
-            console.log("Has clickeado un botón. | id: " + id_usuario);
 
             // Le asignamos al modal un data-id con el usuario que se va a eliminar
             let modal = document.getElementById("EliminarContactoModal");
@@ -230,16 +221,13 @@ function obtenerBotonesEliminadores() {
                         // Obtenemos la respuesta del servidor por medio de un objeto JSON
                         let respuesta = JSON.parse(xhr.responseText);
 
-                        // Imprimimos la respuesta
-                        console.log(respuesta);
-
                         // Si la respuesta es correcta (correcta => se elimnió el usuario) eliminamos el <tr> del DOM
                         if (respuesta.respuesta === 'correcto') {
-                            console.log("El contacto ha sido eliminado.");
                             // Eliminamos el <tr> del contacto en especifico
                             tr_contacto.parentNode.removeChild(tr_contacto);
-                        } else {
-                            console.log("El contacto NO ha sido eliminado.");
+                            
+                            // Realizamos nuevamente la búsqueda de contactos (esto con el fin de que si el usuario busca un contacto en especifico y como resultado aparece solamente uno, pues, al momento de que el usuario lo elimine aparezca el mensaje de: «No hay resultados para "...". Prueba buscando otro contacto>). Sin la función de «realizarBusqueda()» el contacto se eliminaría pero quedaría la tabla vacia, cuando nosotros que aparezca un mensaje personalizado.
+                            realizarBusqueda();
                         }
                     }
                 }
@@ -251,18 +239,14 @@ function obtenerBotonesEliminadores() {
     }
 }
 
-
-document.getElementById("buscador").addEventListener("input", function(evento) {
-    //console.log("Has escrito: \"" + this.value + "\"");
-    let busqueda = this.value;
+function realizarBusqueda() {
+    let busqueda = document.getElementById("buscador").value;
 
     let datos_busqueda = new FormData();
     datos_busqueda.append("busqueda", busqueda);
 
     // Si la longitud de la búsqueda del usuario es mayor a 0, que realice una búsqueda con el input del usuario
     if (busqueda.length > 0) {
-        console.log("Mayor a 0" + busqueda.length + ".");
-
         // Creamos un XHR
         let xhr = new XMLHttpRequest();
     
@@ -312,6 +296,9 @@ document.getElementById("buscador").addEventListener("input", function(evento) {
 
                         // Agregamos el contacto al DOM
                         document.querySelector("table#tabla-de-contactos tbody").appendChild(nuevo_contacto);
+
+                        // Obtenemos los botones eliminadores para después crear un nodeList con los botones (esto se hace con el fin de que cuando el usuario haga un clic en uno de estos botones el sistema sepa qué botón hizo clic el usuario y en base a ello     podamos eliminar el contacto correcto (ya que el boton tiene un «data-id» donde obtenemos el ID del usuario))
+                        obtenerBotonesEliminadores();
                     }
                 } else {
                     /* Entramos a este «else» debido que lo que ingresó el usuario no se encuentra dentro de la base de datos */
@@ -371,8 +358,9 @@ document.getElementById("buscador").addEventListener("input", function(evento) {
 
         // Mandamos el XMLHttpRequest
         xhr.send();
-
-        console.log("El campo de input está vacio.");
     }
-});
+}
+
+document.getElementById("buscador").addEventListener("input", realizarBusqueda);
+
 
